@@ -1,102 +1,5 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
-</head>
-<body>
-  <div class="contentarea">
-    <h1>
-        Using Javascript to capture Photo
-    </h1>
-    <div class="camera">
-        <video id="video">Video stream not available.</video>
-    </div>
-    <div><button id="startbutton">Take photo</button></div>
-
-    <canvas id="canvas"></canvas>
-    <div class="output">
-        <img id="photo" alt="The screen capture will appear in this box.">
-    </div>
-</div>
-</body>
-<script type="text/javascript">
-  function clearphoto() {
-      var context = canvas.getContext('2d');
-      context.fillStyle = "#AAA";
-      context.fillRect(0, 0, canvas.width, canvas.height);
-
-      var data = canvas.toDataURL('image/png');
-      photo.setAttribute('src', data);
-  }
-
-  function takepicture() {
-      var context = canvas.getContext('2d');
-      if (width && height) {
-          canvas.width = width;
-          canvas.height = height;
-          context.drawImage(video, 0, 0, width, height);
-
-          var data = canvas.toDataURL('image/png');
-          photo.setAttribute('src', data);
-      } else {
-          clearphoto();
-      }
-  }
-
-  function startup() {
-    video = document.getElementById('video');
-    canvas = document.getElementById('canvas');
-    photo = document.getElementById('photo');
-    startbutton = document.getElementById('startbutton');
-
-    // access video stream from webcam
-    navigator.mediaDevices.getUserMedia({
-            video: true,
-            audio: false
-        })
-        // on success, stream it in video tag
-        .then(function(stream) {
-            video.srcObject = stream;
-            video.play();
-        })
-        .catch(function(err) {
-            console.log("An error occurred: " + err);
-        });
-
-    video.addEventListener('canplay', function(ev) {
-        if (!streaming) {
-            height = video.videoHeight / (video.videoWidth / width);
-
-            if (isNaN(height)) {
-                height = width / (4 / 3);
-            }
-
-            video.setAttribute('width', width);
-            video.setAttribute('height', height);
-            canvas.setAttribute('width', width);
-            canvas.setAttribute('height', height);
-            streaming = true;
-        }
-    }, false);
-
-    startbutton.addEventListener('click', function(ev) {
-        takepicture();
-        ev.preventDefault();
-    }, false);
-
-    clearphoto();
-}
-
-
-</script>
-</html> -->
-
-
 <!doctype html>
-
+<html>
 <head>
     <style>
     /* CSS comes here */
@@ -145,23 +48,40 @@
         font-family: Arial;
         text-align: center;
     }
+
+    .saveButton {
+      display: block;
+      margin-top: 50px;
+      margin-left: 600px;
+      text-align: center;
+      padding-left: 7px;
+      padding-right: 7px;
+      padding-top: 9px;
+      padding-bottom: 9px;
+      background-color: #45fc03;
+    }
     </style>
-    <title>My Favorite Sport</title>
+    <script src=
+  "https://cdn.jsdelivr.net/npm/html2canvas@1.0.0-rc.5/dist/html2canvas.min.js">
+  	</script>
+    <title>PhotoBooth</title>
 </head>
 
 <body>
     <div class="contentarea">
         <h1>
-            Using Javascript to capture Photo
+            PhotoBooth
         </h1>
         <div class="camera">
             <video id="video">Video stream not available.</video>
         </div>
         <div><button id="startbutton">Take photo</button></div>
         <canvas id="canvas"></canvas>
-        <div class="output">
+
+        <div class="output" id="photo1">
             <img id="photo" alt="The screen capture will appear in this box.">
         </div>
+        <button type="button" name="button" class="saveButton" onclick="takeshot()">Save</button>
     </div>
 
     <script>
@@ -245,7 +165,22 @@
         }
 
         window.addEventListener('load', startup, false);
+
     })();
+
+
+
+
+
+    function takeshot() {
+
+			let div = document.getElementById('photo1');
+
+      html2canvas(div).then((canvas) => {
+        const base64image = canvas.toDataURL("image/png");
+        window.location.href = base64image.replace('image/png', 'image/octet-stream');
+      });
+		}
     </script>
 </body>
 
